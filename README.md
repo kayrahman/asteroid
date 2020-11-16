@@ -7,3 +7,6 @@ Use the updated Gradle version in the `~/gradle/wrapper/gradle-wrapper.propertie
 ```
 distributionUrl = https\://services.gradle.org/distributions/gradle-6.1.1-all.zip
 ```
+
+## Note:
+Go to com.udacity.asteroidradar.Constants and update the API_KEY with your own.
