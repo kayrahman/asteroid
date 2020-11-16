@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -20,9 +21,7 @@ class MainFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
-
         setHasOptionsMenu(true)
 
         observeViewModel(binding)
@@ -31,7 +30,11 @@ class MainFragment : Fragment() {
     }
 
     private fun observeViewModel(binding: FragmentMainBinding) {
-        val adapter = AstroidRecyclerAdapter()
+
+        val adapter = AsteroidRecyclerAdapter(AsteroidRecyclerAdapter.OnAsteroidItemClickListener {
+            viewModel.displayAsteroidDetail(it)
+        })
+
         binding.asteroidRecycler.adapter = adapter
 
         viewModel.asteroids.observe(
@@ -42,6 +45,25 @@ class MainFragment : Fragment() {
                 }
             }
         )
+
+        viewModel.picOfDay.observe(
+                viewLifecycleOwner, Observer {
+
+               if (null != it){
+                binding.apod = it
+                }
+
+        }
+        )
+
+        viewModel.navigateToSelectedAsteroidDetail.observe(viewLifecycleOwner, Observer {
+            if(null != it) {
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+                viewModel.displayAsteroidDetailComplete()
+            }
+        })
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -50,6 +72,42 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+      return when(item.itemId){
+            R.id.show_next_week_menu -> {
+                updateAsteroidData(FetchType.WEEKLY)
+                true
+            }
+
+            R.id.show_today_menu -> {
+                updateAsteroidData(FetchType.TODAY)
+                true
+            }
+
+            R.id.show_saved_menu ->{
+                updateAsteroidData(FetchType.ALL)
+                true
+            }
+
+          else -> super.onOptionsItemSelected(item)
+
+        }
+
+        //return true
+
+
+    }
+
+    enum class FetchType {
+        TODAY,WEEKLY,ALL
+    }
+
+    private fun updateAsteroidData(type : FetchType) {
+        with(viewModel) {
+            when (type) {
+                FetchType.TODAY -> updateAsteroidDataType(FetchType.TODAY.name)
+                FetchType.WEEKLY -> updateAsteroidDataType(FetchType.WEEKLY.name)
+                FetchType.ALL -> updateAsteroidDataType(FetchType.ALL.name)
+            }
+        }
     }
 }

@@ -13,19 +13,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class AstroidRecyclerAdapter : ListAdapter<Asteroid, AstroidRecyclerAdapter.AsteroidViewHolder>(AsteroidDiffCallback()) {
+class AsteroidRecyclerAdapter(val onClickListener : OnAsteroidItemClickListener ) : ListAdapter<Asteroid, AsteroidRecyclerAdapter.AsteroidViewHolder>(AsteroidDiffCallback()) {
 
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
 
     fun submitAsteroidList(list: List<Asteroid>?) {
-
         adapterScope.launch {
-            /*val items = when (list) {
-                null -> listOf(DataItem.Header)
-                else -> listOf(DataItem.Header) + list.map { DataItem.SleepNightItem(it) }
-            }*/
             withContext(Dispatchers.Main) {
                 submitList(list)
             }
@@ -40,6 +35,11 @@ class AstroidRecyclerAdapter : ListAdapter<Asteroid, AstroidRecyclerAdapter.Aste
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
         val asteroid = getItem(position) as Asteroid
         holder.bind(asteroid)
+
+        holder.itemView.setOnClickListener {
+         //  listener.onClick(asteroid)
+            onClickListener.onClick(asteroid)
+        }
     }
 
 
@@ -71,8 +71,16 @@ class AstroidRecyclerAdapter : ListAdapter<Asteroid, AstroidRecyclerAdapter.Aste
 
         }
 
+
+
+
     }
 
+
+     class OnAsteroidItemClickListener(var listener : (Asteroid) -> Unit){
+        fun onClick(asteroid : Asteroid) = listener(asteroid)
+
+    }
 
 
 }

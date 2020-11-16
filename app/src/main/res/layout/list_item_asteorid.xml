@@ -32,11 +32,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="CodeName"
-            style="@style/listItemTextStyle" />
+            style="@style/TextAppearance.Title" />
 
         <TextView
             android:id="@+id/close_approach_date"
-            style="@style/listItemTextStyle"
+            style="@style/TextAppearance.SubTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{asteroid.closeApproachDate}"
@@ -54,6 +54,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:statusIcon = "@{asteroid.potentiallyHazardous}"
+            android:contentDescription="@string/status_icon"
             tools:src="@drawable/ic_status_normal"
             />
 

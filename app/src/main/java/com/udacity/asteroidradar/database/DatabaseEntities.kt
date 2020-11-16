@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.PictureOfDay
 
 
 @Entity(tableName = "asteroid_tbl")
@@ -51,3 +53,26 @@ fun List<DatabaseAsteroid>.asDomainModel() : List<Asteroid>{
         }
 }
 
+@Entity(tableName = "tbl_pod")
+data class DatabasePOD constructor(
+        @PrimaryKey(autoGenerate = false)
+        val id:Long,
+        val url : String,
+        val title : String
+)
+
+fun PictureOfDay.asDatabasePOD() : DatabasePOD{
+        return DatabasePOD(
+                id = 1,
+                title = title,
+                url = url
+        )
+}
+
+fun DatabasePOD.asPicOfDay() : PictureOfDay {
+        return PictureOfDay(
+                title = title,
+                url = url,
+                mediaType = Constants.IMAGE
+        )
+}

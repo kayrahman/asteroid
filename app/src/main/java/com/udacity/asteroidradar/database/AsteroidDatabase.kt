@@ -6,9 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [DatabaseAsteroid::class], version = 1,exportSchema = false)
+@Database(entities = [DatabaseAsteroid::class,DatabasePOD::class], version = 1,exportSchema = false)
 abstract class AsteroidDatabase : RoomDatabase() {
     abstract val asteroidDao: AsteroidDatabaseDao
+    abstract val podDao: PodDao
 
 
     companion object {
